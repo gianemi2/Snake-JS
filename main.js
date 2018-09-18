@@ -24,10 +24,6 @@ class Food{
     }
 
     create(){
-        let oldFood = document.getElementById('food');
-        if(oldFood){
-            oldFood.remove();
-        }
         let screen = document.getElementById('screen');
 
         this.x = random(0, parseInt(screen.style.width));
@@ -122,6 +118,7 @@ let food = new Food();
 
 function eat(){
     if((snake.x == food.x) && (snake.y == food.y)){
+        document.getElementById('food').remove();
         snake.expand();
         food.create();
     }
