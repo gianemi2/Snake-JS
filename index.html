@@ -15,8 +15,24 @@
         Point: <span id="point"></span>
     </div>
     <div id="dialog">
-        <h2>You lose!</h2>
-        <p>Press spacebar for start a new game.</p>
+        <div class="lose">
+            <h2>You lose!</h2>
+            <p>Press spacebar for start a new game.</p>
+        </div>
+        <div class="configuration">
+            <p>Difficulty</p>
+            <div class="btn-group">
+                <button name="difficulty" class="selected" value="0.3">Easy</button>
+                <button name="difficulty" value="0.12">Normal</button>
+                <button name="difficulty" value="0.05">Hard</button>
+            </div>
+            <p>Game size</p>
+            <div class="btn-group">
+                <button name="size" value="200">Small</button>
+                <button name="size" class="selected" value="400">Medium</button>
+                <button name="size" value="600">Large</button>
+            </div>
+        </div>
     </div>
     <script type="text/javascript" src="main.js"></script>
 </body>

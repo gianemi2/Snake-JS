@@ -4,10 +4,12 @@ class Screen{
         this.screen = document.getElementById('screen');
         this.dialog = document.getElementById('dialog');
         this.stop = false;
+        this.difficulty = document.querySelector('button.selected[name="difficulty"]').value;
+        this.size = document.querySelector('button.selected[name="size"]').value;
         this.dialog.style.display = 'none';
-        this.refreshRate = 1000 * 0.25;
-        this.width = 200;
-        this.height = 200;
+        this.refreshRate = 1000 * this.difficulty;
+        this.width = this.size;
+        this.height = this.size;
         this.xfood = 0;
         this.yfood = 0;
         this.build();
@@ -205,5 +207,12 @@ function play(){
         }
     }, game.refreshRate);
 }
+
+document.querySelectorAll('.btn-group button').forEach(function(v){
+    v.addEventListener('click', function(){
+        this.parentElement.querySelectorAll('button').forEach(function(v){ v.classList.remove('selected'); });
+        this.classList.add('selected');
+    });
+});
 
 let clock = play();

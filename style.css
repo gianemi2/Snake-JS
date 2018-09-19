@@ -7,6 +7,14 @@ body{
     font-family: helvetica, arial, courier;
 }
 
+.btn-group button{
+    border-radius: 4px;
+}
+
+.btn-group button.selected{
+    background: #2D81F2;
+}
+
 #screen{
     height: 500px;
     width: 500px;
