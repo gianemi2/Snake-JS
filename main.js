@@ -2,9 +2,12 @@
 class Screen{
     constructor(){
         this.screen = document.getElementById('screen');
-        this.refreshRate = 1000 * 0.1;
-        this.width = 600;
-        this.height = 600;
+        this.dialog = document.getElementById('dialog');
+        this.stop = false;
+        this.dialog.style.display = 'none';
+        this.refreshRate = 1000 * 0.25;
+        this.width = 200;
+        this.height = 200;
         this.xfood = 0;
         this.yfood = 0;
         this.build();
@@ -13,6 +16,12 @@ class Screen{
     build(){
         this.screen.style.height = this.height+'px';
         this.screen.style.width = this.width+'px';
+    }
+
+    gameover(clockId){
+        this.dialog.style.display = 'block';
+        clearInterval(clockId);
+        this.stop = true;
     }
 }
 
@@ -46,12 +55,18 @@ class Snake{
         this.index = 0;
         this.scl = 10;
         this.snake = '';
-        this.startingPoint = 3;
+        this.point = 0;
         this.createSnake();
-        for(let i = 0; i < this.startingPoint + 1; i++){
-            this.expand();
+        for(let i = 0; i < 3; i++){
+            this.expand(false);
         }
         this.moveSnake(this.xspeed, this.yspeed);
+        this.updatePoint();
+    }
+
+    updatePoint(){
+        let point = document.getElementById('point');
+        point.innerText = this.point;
     }
 
     createSnake(){
@@ -80,11 +95,17 @@ class Snake{
         }
     }
 
-    expand(){
+    expand(updatePoint = true){
         let snake = document.getElementById('snake');
         let tail = document.createElement('div');
         tail.classList.add('tail');
+        tail.style.left = '-100px';
+        tail.style.top = '-100px';
         snake.appendChild(tail);
+        if(updatePoint){
+            this.point++;
+            this.updatePoint();
+        }
     }
 
     follow(){
@@ -102,13 +123,6 @@ class Snake{
                 tail[i].style.top = tail[i-1].dataset.top;
             }
         }
-    }
-
-    gameover(snake){
-        this.x = 0;
-        this.y = 0;
-        snake = new Snake();
-        return snake;
     }
 
     isGameover(game){
@@ -138,21 +152,22 @@ class Snake{
         this.snake.style.left = this.x+'px';
         this.snake.style.top = this.y+'px';
     }
+
+    eat(food){
+        if((snake.x == food.x) && (snake.y == food.y)){
+            document.getElementById('food').remove();
+            snake.expand();
+            food.create();
+        }
+    }
 }
 
 let snake = new Snake();
 let game = new Screen();
 let food = new Food();
 
-function eat(){
-    if((snake.x == food.x) && (snake.y == food.y)){
-        document.getElementById('food').remove();
-        snake.expand();
-        food.create();
-    }
-}
-
 function onKeyPress(keyCode){
+    console.log(keyCode);
     if(keyCode == 'ArrowUp'){
         snake.moveSnake(0, -1);
     } else if(keyCode == 'ArrowDown'){
@@ -163,6 +178,12 @@ function onKeyPress(keyCode){
         snake.moveSnake(1, 0);
     } else if(keyCode == 'Escape'){
         snake.expand();
+    } else if(keyCode == 'Space'){
+        if(game.stop){
+            snake = new Snake();
+            game = new Screen();
+            clock = play();
+        }
     }
 }
 
@@ -174,11 +195,15 @@ function random(min, max) {
     return (Math.floor(Math.random() * ((max - min) / 10 )) + min) * 10;
 }
 
-setInterval( function(){
-    snake.update();
-    snake.follow();
-    eat();
-    if(snake.isGameover(game)){
-        snake = snake.gameover(snake);
-    }
-}, game.refreshRate);
+function play(){
+    let interval = setInterval( function(){
+        snake.update();
+        snake.follow();
+        snake.eat(food);
+        if(snake.isGameover(game)){
+            game.gameover(interval);
+        }
+    }, game.refreshRate);
+}
+
+let clock = play();
