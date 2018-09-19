@@ -2,7 +2,7 @@
 class Screen{
     constructor(){
         this.screen = document.getElementById('screen');
-        this.refreshRate = 1000 * 0.2;
+        this.refreshRate = 1000 * 0.1;
         this.width = 600;
         this.height = 600;
         this.xfood = 0;
@@ -47,16 +47,18 @@ class Snake{
         this.scl = 10;
         this.snake = '';
         this.startingPoint = 3;
-        //Multiplier for seconds;
+        this.createSnake();
         for(let i = 0; i < this.startingPoint + 1; i++){
             this.expand();
         }
-        this.createSnake();
         this.moveSnake(this.xspeed, this.yspeed);
     }
 
     createSnake(){
         let snake = document.getElementById('snake');
+        while(snake.firstChild){
+            snake.removeChild(snake.firstChild);
+        }
         let head = document.createElement('div');
         head.classList.add('head');
         snake.appendChild(head);
@@ -99,6 +101,32 @@ class Snake{
                 tail[i].style.left = tail[i-1].dataset.left;
                 tail[i].style.top = tail[i-1].dataset.top;
             }
+        }
+    }
+
+    gameover(snake){
+        this.x = 0;
+        this.y = 0;
+        snake = new Snake();
+        return snake;
+    }
+
+    isGameover(game){
+        let head = document.querySelector('.head');
+        let tail = document.querySelectorAll('.tail');
+        let died = false;
+        tail.forEach(function(piece){
+            if((piece.style.left === head.style.left) && (piece.style.top === head.style.top)){
+                died = true;
+            }
+        });
+        if(this.x === -10 || this.x === game.width || this.y === -10 || this.y === game.height){
+            died = true;
+        }
+        if(!died){
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -150,4 +178,7 @@ setInterval( function(){
     snake.update();
     snake.follow();
     eat();
+    if(snake.isGameover(game)){
+        snake = snake.gameover(snake);
+    }
 }, game.refreshRate);
