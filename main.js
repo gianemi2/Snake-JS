@@ -10,6 +10,7 @@ class Screen{
         this.refreshRate = 1000 * this.difficulty;
         this.width = this.size;
         this.height = this.size;
+        console.log(this.width);
         this.xfood = 0;
         this.yfood = 0;
         this.build();
@@ -136,7 +137,7 @@ class Snake{
                 died = true;
             }
         });
-        if(this.x === -10 || this.x === game.width || this.y === -10 || this.y === game.height){
+        if(this.x === -10 || this.x == game.width || this.y === -10 || this.y == game.height){
             died = true;
         }
         if(!died){
@@ -169,7 +170,6 @@ let game = new Screen();
 let food = new Food();
 
 function onKeyPress(keyCode){
-    console.log(keyCode);
     if(keyCode == 'ArrowUp'){
         snake.moveSnake(0, -1);
     } else if(keyCode == 'ArrowDown'){
